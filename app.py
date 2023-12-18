@@ -25,8 +25,8 @@ def load_game_data():
     for file in files:
         #print(file)
         dados = []
-        dados.append(pd.read_excel("dados/Jogos/"+file, sheet_name="Indy"), engine='openpyxl')
-        dados.append(pd.read_excel("dados/Jogos/"+file, sheet_name="Sobre"), engine='openpyxl')
+        dados.append(pd.read_excel("dados/Jogos/"+file, sheet_name="Indy", engine='openpyxl'))
+        dados.append(pd.read_excel("dados/Jogos/"+file, sheet_name="Sobre", engine='openpyxl'))
         dados_finais.append(dados)
     
     return dados_finais
