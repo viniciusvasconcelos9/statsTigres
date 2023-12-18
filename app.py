@@ -14,7 +14,7 @@ sidebar_option = st.sidebar.selectbox('Menu',['Dados Gerais','Team Leaders', 'In
 
 def load_players_data():
     arquivo = "dados/Dados Atletas - Tigres.xlsx"
-    dados = pd.read_excel(arquivo)
+    dados = pd.read_excel(arquivo, engine='openpyxl')
     return dados
     
 def load_game_data():
@@ -25,8 +25,8 @@ def load_game_data():
     for file in files:
         #print(file)
         dados = []
-        dados.append(pd.read_excel("dados/Jogos/"+file, sheet_name="Indy"))
-        dados.append(pd.read_excel("dados/Jogos/"+file, sheet_name="Sobre"))
+        dados.append(pd.read_excel("dados/Jogos/"+file, sheet_name="Indy"), engine='openpyxl')
+        dados.append(pd.read_excel("dados/Jogos/"+file, sheet_name="Sobre"), engine='openpyxl')
         dados_finais.append(dados)
     
     return dados_finais
