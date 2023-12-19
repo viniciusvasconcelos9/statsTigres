@@ -140,7 +140,7 @@ elif sidebar_option == "Indy":
 
     gamestats_tratado = df_stats(gamestats, selected_season, selected_comp)
     gamestats_tratado = gamestats_tratado.loc[gamestats_tratado['Numero'] == option]
-    st.write(gamestats_tratado)
+    
     if resultado['Pos'].to_string(index=False) == 'QB':
         st.write('Passes lançados: ' + gamestats_tratado['Passes tentados'].to_string(index=False))
         st.write('Passes completos: '+ gamestats_tratado['Passes completos'].to_string(index=False))
