@@ -117,7 +117,6 @@ elif sidebar_option == "Indy":
     #st.write(playerstats['Numero'])
     option = st.sidebar.selectbox('Número do jogador',(playerstats['Numero']))
     resultado = playerstats[playerstats['Numero'] == option]
-    
     st.sidebar.subheader(resultado['Apelido'].to_string(index=False))
 
     col2, col3 = st.sidebar.columns(2)
@@ -152,9 +151,23 @@ elif sidebar_option == "Indy":
         st.write('Interceptações: ' + gamestats_tratado['INT'].to_string(index=False))
         qb_rating = rating(gamestats_tratado['Passes tentados'].to_string(index=False), gamestats_tratado['Passes completos'].to_string(index=False), gamestats_tratado['Jardas passadas'].to_string(index=False), gamestats_tratado['TD passado'].to_string(index=False), gamestats_tratado['INT'].to_string(index=False))
         st.write('Rating: '+ str(round(qb_rating, 1)))
-    elif resultado['Pos'].to_string(index=False) == "OL":
+    if resultado['Pos'].to_string(index=False) == "RB":
+        st.write('Alvo: ')
+        st.write('Jardas corridas: ')
+        st.write('Passes recebidos: ')
+        st.write('Jardas recebidas: ')
+        st.write('TD: ')
+        st.write('Fumble: ')
+    if resultado['Pos'].to_string(index=False) == "WR":
+        st.write('Alvo: ')
+        st.write('Jardas corridas: ')
+        st.write('Passes recebidos: ')
+        st.write('Jardas recebidas: ')
+        st.write('TD: ')
+        st.write('Fumble: ')    
+    if resultado['Pos'].to_string(index=False) == "OL":
         st.subheader('OL')
-    elif resultado['Pos'].to_string(index=False) == "LB" or "DL" or "DB":
+    if resultado['Pos'].to_string(index=False) == "DL":
         st.write('Tackle: ' + gamestats_tratado['Tackle'].to_string(index=False))
         st.write('Tackle for loss: ' + gamestats_tratado['Tackle for loss'].to_string(index=False))
         st.write('Sack: ' + gamestats_tratado['D-Sack'].to_string(index=False))
@@ -163,13 +176,15 @@ elif sidebar_option == "Indy":
         st.write('TD: ' + gamestats_tratado['TD defesa'].to_string(index=False))
         st.write('Fumble forçado: ' + gamestats_tratado['FF'].to_string(index=False))
         st.write('Fumble recuperado: ' + gamestats_tratado['FR'].to_string(index=False))
-    elif resultado['Pos'].to_string(index=False) == "RB" or "WR":
-        st.write('Alvo: ')
-        st.write('Jardas corridas: ')
-        st.write('Passes recebidos: ')
-        st.write('Jardas recebidas: ')
-        st.write('TD: ')
-        st.write('Fumble: ')
+    if resultado['Pos'].to_string(index=False) == "DB":
+        st.write('Tackle: ' + gamestats_tratado['Tackle'].to_string(index=False))
+        st.write('Tackle for loss: ' + gamestats_tratado['Tackle for loss'].to_string(index=False))
+        st.write('Sack: ' + gamestats_tratado['D-Sack'].to_string(index=False))
+        st.write('Interceptações: ' + gamestats_tratado['Interceptação'].to_string(index=False))
+        st.write('Passes defletados: ' + gamestats_tratado['Passe defletado'].to_string(index=False))
+        st.write('TD: ' + gamestats_tratado['TD defesa'].to_string(index=False))
+        st.write('Fumble forçado: ' + gamestats_tratado['FF'].to_string(index=False))
+        st.write('Fumble recuperado: ' + gamestats_tratado['FR'].to_string(index=False))
 
 else:
     setor_option = st.sidebar.selectbox('Setor',['Ataque','Defesa'])
