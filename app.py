@@ -140,7 +140,7 @@ elif sidebar_option == "Indy":
 
     gamestats_tratado = df_stats(gamestats, selected_season, selected_comp)
     gamestats_tratado = gamestats_tratado.loc[gamestats_tratado['Numero'] == option]
-    
+    st.write(gamestats_tratado)
     if resultado['Pos'].to_string(index=False) == 'QB':
         st.write('Passes lançados: ' + gamestats_tratado['Passes tentados'].to_string(index=False))
         st.write('Passes completos: '+ gamestats_tratado['Passes completos'].to_string(index=False))
@@ -152,19 +152,25 @@ elif sidebar_option == "Indy":
         qb_rating = rating(gamestats_tratado['Passes tentados'].to_string(index=False), gamestats_tratado['Passes completos'].to_string(index=False), gamestats_tratado['Jardas passadas'].to_string(index=False), gamestats_tratado['TD passado'].to_string(index=False), gamestats_tratado['INT'].to_string(index=False))
         st.write('Rating: '+ str(round(qb_rating, 1)))
     if resultado['Pos'].to_string(index=False) == "RB":
-        st.write('Alvo: ')
-        st.write('Jardas corridas: ')
-        st.write('Passes recebidos: ')
-        st.write('Jardas recebidas: ')
-        st.write('TD: ')
-        st.write('Fumble: ')
+        st.write('Corridas tentadas: ' + gamestats_tratado['Corridas tentadas'].to_string(index=False))
+        st.write('Jardas corridas: ' + gamestats_tratado['Jardas corridas'].to_string(index=False))
+        st.write('TD correndo: ' + gamestats_tratado['TD corrido'].to_string(index=False))
+        st.write('Alvo: ' + gamestats_tratado['Alvo'].to_string(index=False))
+        st.write('Passes recebidos: ' + gamestats_tratado['Passes recebidos'].to_string(index=False))
+        st.write('Drop: ' + gamestats_tratado['Drop'].to_string(index=False))
+        st.write('Jardas recebidas: ' + gamestats_tratado['Jardas recebidas'].to_string(index=False))
+        st.write('TD recebendo: ' + gamestats_tratado['TD recebendo'].to_string(index=False))
+        st.write('Fumble: ' + gamestats_tratado['Fumbles sofridos'].to_string(index=False))
     if resultado['Pos'].to_string(index=False) == "WR":
-        st.write('Alvo: ')
-        st.write('Jardas corridas: ')
-        st.write('Passes recebidos: ')
-        st.write('Jardas recebidas: ')
-        st.write('TD: ')
-        st.write('Fumble: ')    
+        st.write('Alvo: ' + gamestats_tratado['Alvo'].to_string(index=False))
+        st.write('Passes recebidos: ' + gamestats_tratado['Passes recebidos'].to_string(index=False))
+        st.write('Drop: ' + gamestats_tratado['Drop'].to_string(index=False))
+        st.write('Jardas recebidas: ' + gamestats_tratado['Jardas recebidas'].to_string(index=False))
+        st.write('TD recebendo: ' + gamestats_tratado['TD recebendo'].to_string(index=False))
+        st.write('Corridas tentadas: ' + gamestats_tratado['Corridas tentadas'].to_string(index=False))
+        st.write('Jardas corridas: ' + gamestats_tratado['Jardas corridas'].to_string(index=False))
+        st.write('TD correndo: ' + gamestats_tratado['TD corrido'].to_string(index=False))
+        st.write('Fumble: ' + gamestats_tratado['Fumbles sofridos'].to_string(index=False))
     if resultado['Pos'].to_string(index=False) == "OL":
         st.subheader('OL')
     if resultado['Pos'].to_string(index=False) == "DL":
