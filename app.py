@@ -8,7 +8,7 @@ import streamlit as st
 st.title('Estatísticas - Tigres FA')
 
 #st.sidebar.image('tigres.png')
-sidebar_option = st.sidebar.selectbox('Menu',['Dados Gerais','Team Leaders', 'Indy'])
+sidebar_option = st.sidebar.selectbox('Menu',['Team Leaders', 'Indy', 'Game stats', 'Dados Gerais'])
 @st.cache_data
 
 
@@ -191,6 +191,9 @@ elif sidebar_option == "Indy":
         st.write('TD: ' + gamestats_tratado['TD defesa'].to_string(index=False))
         st.write('Fumble forçado: ' + gamestats_tratado['FF'].to_string(index=False))
         st.write('Fumble recuperado: ' + gamestats_tratado['FR'].to_string(index=False))
+
+elif sidebar_option == 'Game stats':
+    st.write('Game stats')
 
 else:
     setor_option = st.sidebar.selectbox('Setor',['Ataque','Defesa'])
