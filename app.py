@@ -177,6 +177,15 @@ elif sidebar_option == "Indy":
         st.write('TD: ' + gamestats_tratado['TD defesa'].to_string(index=False))
         st.write('Fumble forçado: ' + gamestats_tratado['FF'].to_string(index=False))
         st.write('Fumble recuperado: ' + gamestats_tratado['FR'].to_string(index=False))
+    if resultado['Pos'].to_string(index=False) == "LB":
+        st.write('Tackle: ' + gamestats_tratado['Tackle'].to_string(index=False))
+        st.write('Tackle for loss: ' + gamestats_tratado['Tackle for loss'].to_string(index=False))
+        st.write('Sack: ' + gamestats_tratado['D-Sack'].to_string(index=False))
+        st.write('Interceptações: ' + gamestats_tratado['Interceptação'].to_string(index=False))
+        st.write('Passes defletados: ' + gamestats_tratado['Passe defletado'].to_string(index=False))
+        st.write('TD: ' + gamestats_tratado['TD defesa'].to_string(index=False))
+        st.write('Fumble forçado: ' + gamestats_tratado['FF'].to_string(index=False))
+        st.write('Fumble recuperado: ' + gamestats_tratado['FR'].to_string(index=False))
     if resultado['Pos'].to_string(index=False) == "DB":
         st.write('Tackle: ' + gamestats_tratado['Tackle'].to_string(index=False))
         st.write('Tackle for loss: ' + gamestats_tratado['Tackle for loss'].to_string(index=False))
@@ -200,39 +209,46 @@ else:
         col2, col3, col4 = st.columns(3)
 
         col2.write('Tackle')
-        tackle_stats = gamestats_tratado.sort_values(by='Tackle', ascending=False).iloc[0:10]
-        tackle_stats = tackle_stats.loc[:,['Numero','Tackle']]
-        col2.dataframe(tackle_stats, hide_index=True)
+        stats = gamestats_tratado.sort_values(by='Tackle', ascending=False)
+        stats = stats.loc[:,['Numero','Tackle']]
+        stats = stats[stats["Tackle"] != 0]
+        col2.dataframe(stats, hide_index=True)
 
         col3.write('Tackle for loss')
-        tackle_stats = gamestats_tratado.sort_values(by='Tackle for loss', ascending=False).iloc[0:5]
-        tackle_stats = tackle_stats.loc[:,['Numero','Tackle for loss']]
-        col3.dataframe(tackle_stats, hide_index=True)
+        stats = gamestats_tratado.sort_values(by='Tackle for loss', ascending=False)
+        stats = stats.loc[:,['Numero','Tackle for loss']]
+        stats = stats[stats["Tackle for loss"] != 0]
+        col3.dataframe(stats, hide_index=True)
 
         col4.write('Sack')
-        tackle_stats = gamestats_tratado.sort_values(by='D-Sack', ascending=False).iloc[0:5]
-        tackle_stats = tackle_stats.loc[:,['Numero','D-Sack']]
-        col4.dataframe(tackle_stats, hide_index=True)
+        stats = gamestats_tratado.sort_values(by='D-Sack', ascending=False)
+        stats = stats.loc[:,['Numero','D-Sack']]
+        stats = stats[stats["D-Sack"] != 0]
+        col4.dataframe(stats, hide_index=True)
         
         col2.write('Interceptações')
-        tackle_stats = gamestats_tratado.sort_values(by='Interceptação', ascending=False).iloc[0:10]
-        tackle_stats = tackle_stats.loc[:,['Numero','Interceptação']]
-        col2.dataframe(tackle_stats, hide_index=True)
+        stats = gamestats_tratado.sort_values(by='Interceptação', ascending=False)
+        stats = stats.loc[:,['Numero','Interceptação']]
+        stats = stats[stats["Interceptação"] != 0]
+        col2.dataframe(stats, hide_index=True)
 
         col3.write('Passe defletado')
-        tackle_stats = gamestats_tratado.sort_values(by='Passe defletado', ascending=False).iloc[0:5]
-        tackle_stats = tackle_stats.loc[:,['Numero','Passe defletado']]
-        col3.dataframe(tackle_stats, hide_index=True)
+        stats = gamestats_tratado.sort_values(by='Passe defletado', ascending=False)
+        stats = stats.loc[:,['Numero','Passe defletado']]
+        stats = stats[stats["Passe defletado"] != 0]
+        col3.dataframe(stats, hide_index=True)
 
         col4.write('Fumble forçado')
-        tackle_stats = gamestats_tratado.sort_values(by='FF', ascending=False).iloc[0:5]
-        tackle_stats = tackle_stats.loc[:,['Numero','FF']]
-        col4.dataframe(tackle_stats, hide_index=True)
+        stats = gamestats_tratado.sort_values(by='FF', ascending=False)
+        stats = stats.loc[:,['Numero','FF']]
+        stats = stats[stats["FF"] != 0]
+        col4.dataframe(stats, hide_index=True)
 
         col4.write('Fumble recuperado')
-        tackle_stats = gamestats_tratado.sort_values(by='FR', ascending=False).iloc[0:5]
-        tackle_stats = tackle_stats.loc[:,['Numero','FR']]
-        col4.dataframe(tackle_stats, hide_index=True)
+        stats = gamestats_tratado.sort_values(by='FR', ascending=False)
+        stats = stats.loc[:,['Numero','FR']]
+        stats = stats[stats["FR"] != 0]
+        col4.dataframe(stats, hide_index=True)
 
     if setor_option == "Ataque":
         selected_season = st.multiselect('Temporada', temporadas(gamestats),temporadas(gamestats))
@@ -242,36 +258,43 @@ else:
         col2, col3, col4 = st.columns(3)
 
         col2.write('Jardas recebidas')
-        tackle_stats = gamestats_tratado.sort_values(by='Jardas recebidas', ascending=False).iloc[0:10]
-        tackle_stats = tackle_stats.loc[:,['Numero','Jardas recebidas']]
-        col2.dataframe(tackle_stats, hide_index=True)
+        stats = gamestats_tratado.sort_values(by='Jardas recebidas', ascending=False)
+        stats = stats.loc[:,['Numero','Jardas recebidas']]
+        stats = stats[stats["Jardas recebidas"] != 0]
+        col2.dataframe(stats, hide_index=True)
 
         col3.write('Passes recebidos')
-        tackle_stats = gamestats_tratado.sort_values(by='Passes recebidos', ascending=False).iloc[0:5]
-        tackle_stats = tackle_stats.loc[:,['Numero','Passes recebidos']]
-        col3.dataframe(tackle_stats, hide_index=True)
+        stats = gamestats_tratado.sort_values(by='Passes recebidos', ascending=False)
+        stats = stats.loc[:,['Numero','Passes recebidos']]
+        stats = stats[stats["Passes recebidos"] != 0]
+        col3.dataframe(stats, hide_index=True)
 
         col4.write('Alvo')
-        tackle_stats = gamestats_tratado.sort_values(by='Alvo', ascending=False).iloc[0:5]
-        tackle_stats = tackle_stats.loc[:,['Numero','Alvo']]
-        col4.dataframe(tackle_stats, hide_index=True)
+        stats = gamestats_tratado.sort_values(by='Alvo', ascending=False)
+        stats = stats.loc[:,['Numero','Alvo']]
+        stats = stats[stats["Alvo"] != 0]
+        col4.dataframe(stats, hide_index=True)
         
         col2.write('TD aéreo')
-        tackle_stats = gamestats_tratado.sort_values(by='TD recebendo', ascending=False).iloc[0:10]
-        tackle_stats = tackle_stats.loc[:,['Numero','TD recebendo']]
-        col2.dataframe(tackle_stats, hide_index=True)
+        stats = gamestats_tratado.sort_values(by='TD recebendo', ascending=False)
+        stats = stats.loc[:,['Numero','TD recebendo']]
+        stats = stats[stats["TD recebendo"] != 0]
+        col2.dataframe(stats, hide_index=True)
 
         col3.write('Corridas tentadas')
-        tackle_stats = gamestats_tratado.sort_values(by='Corridas tentadas', ascending=False).iloc[0:5]
-        tackle_stats = tackle_stats.loc[:,['Numero','Corridas tentadas']]
-        col3.dataframe(tackle_stats, hide_index=True)
+        stats = gamestats_tratado.sort_values(by='Corridas tentadas', ascending=False)
+        stats = stats.loc[:,['Numero','Corridas tentadas']]
+        stats = stats[stats["Corridas tentadas"] != 0]
+        col3.dataframe(stats, hide_index=True)
 
         col4.write('Jardas corridas')
-        tackle_stats = gamestats_tratado.sort_values(by='Jardas corridas', ascending=False).iloc[0:5]
-        tackle_stats = tackle_stats.loc[:,['Numero','Jardas corridas']]
-        col4.dataframe(tackle_stats, hide_index=True)
+        stats = gamestats_tratado.sort_values(by='Jardas corridas', ascending=False)
+        stats = stats.loc[:,['Numero','Jardas corridas']]
+        stats = stats[stats["Jardas corridas"] != 0]
+        col4.dataframe(stats, hide_index=True)
 
         col4.write('TD corrido')
-        tackle_stats = gamestats_tratado.sort_values(by='TD corrido', ascending=False).iloc[0:5]
-        tackle_stats = tackle_stats.loc[:,['Numero','TD corrido']]
-        col4.dataframe(tackle_stats, hide_index=True)
+        stats = gamestats_tratado.sort_values(by='TD corrido', ascending=False)
+        stats = stats.loc[:,['Numero','TD corrido']]
+        stats = stats[stats["TD corrido"] != 0]
+        col4.dataframe(stats, hide_index=True)
