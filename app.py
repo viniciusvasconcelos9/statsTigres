@@ -7,7 +7,8 @@ import streamlit as st
 
 st.title('Estatísticas - Tigres FA')
 
-#st.sidebar.image('tigres.png')
+st.sidebar.image('tigres.png', width=150)
+
 sidebar_option = st.sidebar.selectbox('Menu',['Team Leaders', 'Indy', 'Game stats', 'Dados Gerais'])
 @st.cache_data
 
@@ -87,6 +88,13 @@ def rating(att, comp, yds, td, ints):
 
     return rat
 
+def team_leaders(stat_name,df_gamestats):
+    stats = df_gamestats.loc[:,['Numero',stat_name]]
+    stats = df_nome_numero.merge(stats, on='Numero', how='left')
+    stats = stats[stats[stat_name] > 0]
+
+    return stats
+
 
 gamestats = load_game_data()
 #st.write(gamestats[0][1]['Ano'].to_string(index=False))
@@ -113,7 +121,7 @@ elif sidebar_option == "Indy":
     option = st.sidebar.selectbox('Número do jogador',(playerstats['Numero']))
     resultado = playerstats[playerstats['Numero'] == option]
     st.sidebar.subheader(resultado['Apelido'].to_string(index=False))
-
+    st.subheader(resultado['Nome'].to_string(index=False))
     col2, col3 = st.sidebar.columns(2)
 
     col2.write('Posição: ' + resultado['Pos'].to_string(index=False))
@@ -205,51 +213,31 @@ else:
         selected_season = st.multiselect('Temporada', temporadas(gamestats),temporadas(gamestats))
         selected_comp = st.multiselect('Campeonato', competicoes(gamestats, selected_season), competicoes(gamestats, selected_season))
         gamestats_tratado = df_stats(gamestats, selected_season, selected_comp)
+        df_nome_numero = playerstats.loc[:,['Numero','Apelido']]   
+        col2, col3 = st.columns(2)
 
-        col2, col3, col4 = st.columns(3)
-
+        
         col2.write('Tackle')
-        stats = gamestats_tratado.sort_values(by='Tackle', ascending=False)
-        stats = stats.loc[:,['Numero','Tackle']]
-        stats = stats[stats["Tackle"] != 0]
-        col2.dataframe(stats, hide_index=True)
+        col2.dataframe(team_leaders('Tackle',gamestats_tratado).sort_values(by='Tackle', ascending=False), hide_index=True)
 
         col3.write('Tackle for loss')
-        stats = gamestats_tratado.sort_values(by='Tackle for loss', ascending=False)
-        stats = stats.loc[:,['Numero','Tackle for loss']]
-        stats = stats[stats["Tackle for loss"] != 0]
-        col3.dataframe(stats, hide_index=True)
+        col3.dataframe(team_leaders('Tackle for loss',gamestats_tratado).sort_values(by='Tackle for loss', ascending=False), hide_index=True)
 
-        col4.write('Sack')
-        stats = gamestats_tratado.sort_values(by='D-Sack', ascending=False)
-        stats = stats.loc[:,['Numero','D-Sack']]
-        stats = stats[stats["D-Sack"] != 0]
-        col4.dataframe(stats, hide_index=True)
+        col2.write('Sack')
+        col2.dataframe(team_leaders('D-Sack',gamestats_tratado).sort_values(by='D-Sack', ascending=False), hide_index=True)
         
-        col2.write('Interceptações')
-        stats = gamestats_tratado.sort_values(by='Interceptação', ascending=False)
-        stats = stats.loc[:,['Numero','Interceptação']]
-        stats = stats[stats["Interceptação"] != 0]
-        col2.dataframe(stats, hide_index=True)
-
+        col3.write('Interceptações')
+        col3.dataframe(team_leaders('Interceptação',gamestats_tratado).sort_values(by='Interceptação', ascending=False), hide_index=True)
+        
+        col3.write('Fumble forçado')
+        col3.dataframe(team_leaders('FF',gamestats_tratado).sort_values(by='FF', ascending=False), hide_index=True)
+        
+        col3.write('Fumble recuperado')
+        col3.dataframe(team_leaders('FR',gamestats_tratado).sort_values(by='FR', ascending=False), hide_index=True)
+        
         col3.write('Passe defletado')
-        stats = gamestats_tratado.sort_values(by='Passe defletado', ascending=False)
-        stats = stats.loc[:,['Numero','Passe defletado']]
-        stats = stats[stats["Passe defletado"] != 0]
-        col3.dataframe(stats, hide_index=True)
-
-        col4.write('Fumble forçado')
-        stats = gamestats_tratado.sort_values(by='FF', ascending=False)
-        stats = stats.loc[:,['Numero','FF']]
-        stats = stats[stats["FF"] != 0]
-        col4.dataframe(stats, hide_index=True)
-
-        col4.write('Fumble recuperado')
-        stats = gamestats_tratado.sort_values(by='FR', ascending=False)
-        stats = stats.loc[:,['Numero','FR']]
-        stats = stats[stats["FR"] != 0]
-        col4.dataframe(stats, hide_index=True)
-
+        col3.dataframe(team_leaders('Passe defletado',gamestats_tratado).sort_values(by='Passe defletado', ascending=False), hide_index=True)
+        
     if setor_option == "Ataque":
         selected_season = st.multiselect('Temporada', temporadas(gamestats),temporadas(gamestats))
         selected_comp = st.multiselect('Campeonato', competicoes(gamestats, selected_season), competicoes(gamestats, selected_season))
