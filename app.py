@@ -59,6 +59,18 @@ def competicoes (df, temporada):
                 camp.append(comp)
     return camp 
 
+def jogos (df, temporada, competicao):
+    games = []
+    for x in range (len(df)):
+        if df[x][1]['Ano'].to_string(index=False) in temporada:
+            if df[x][1]['Competicao'].to_string(index=False) in competicao:
+                game = df[x][1]['Ano'].to_string(index=False) + ' - ' + df[x][1]['Competicao'].to_string(index=False) + ' - ' + df[x][1]['Rodada'].to_string(index=False) + ' - vs. ' + df[x][1]['Time'].to_string(index=False)+ ' - ' + df[x][1]['Local'].to_string(index=False)
+                if game in games:
+                    continue
+                else:
+                    games.append(game)
+    return games
+
 def df_stats(df, ano, campeonato):
     
     new_template = df[0][0]
@@ -71,6 +83,13 @@ def df_stats(df, ano, campeonato):
                 new_dataframe += df[x][0]
     new_dataframe['Numero'] = range(100)         
     return new_dataframe
+
+def df_team_stats(df, game):
+    jogo = game.split('-')
+    
+    #for x in range(len(df)):
+
+
 
 def rating(att, comp, yds, td, ints):
 
@@ -140,7 +159,7 @@ elif sidebar_option == "Indy":
       
     selected_season = st.multiselect('Temporada', temporadas(gamestats),temporadas(gamestats))
     selected_comp = st.multiselect('Campeonato', competicoes(gamestats, selected_season), competicoes(gamestats, selected_season))
-
+    st.write('Jogos (desde 2024): ')
     gamestats_tratado = df_stats(gamestats, selected_season, selected_comp)
     gamestats_tratado = gamestats_tratado.loc[gamestats_tratado['Numero'] == option]
     
@@ -205,15 +224,38 @@ elif sidebar_option == "Indy":
         st.write('Fumble recuperado: ' + gamestats_tratado['FR'].to_string(index=False))
 
 elif sidebar_option == 'Game stats':
-    st.write('Game stats')
+
+    selected_season = st.sidebar.multiselect('Temporada', temporadas(gamestats),temporadas(gamestats))
+    selected_comp = st.sidebar.multiselect('Campeonato', competicoes(gamestats, selected_season), competicoes(gamestats, selected_season))
+    selected_game = st.sidebar.selectbox('Jogo',jogos(gamestats, selected_season, selected_comp))
+
+    #gamestats_tratado = df_stats(gamestats, selected_season, selected_comp) 
+
+    #st.dataframe(gamestats_tratado)
+
+    st.subheader('Ataque')
+
+    st.write('Jardas totais')
+    st.write('Snaps totais')
+    st.write('Jardas corridas/tentativas: ')
+    st.write('TD corrido: ')
+    st.write('Passes completos/tentados: ')
+    st.write('Jardas aéreas')
+    st.write('TD aéreo: ')
+    st.write('Total de first downs: ')
+    st.write('Eficiência em 3rd down: ')
+
+    st.subheader('Defesa')
+    st.subheader('Special teams')
 
 else:
     setor_option = st.sidebar.selectbox('Setor',['Ataque','Defesa'])
+    df_nome_numero = playerstats.loc[:,['Numero','Apelido']]  
+
     if setor_option == "Defesa":
         selected_season = st.multiselect('Temporada', temporadas(gamestats),temporadas(gamestats))
         selected_comp = st.multiselect('Campeonato', competicoes(gamestats, selected_season), competicoes(gamestats, selected_season))
-        gamestats_tratado = df_stats(gamestats, selected_season, selected_comp)
-        df_nome_numero = playerstats.loc[:,['Numero','Apelido']]   
+        gamestats_tratado = df_stats(gamestats, selected_season, selected_comp) 
         col2, col3 = st.columns(2)
 
         
@@ -243,46 +285,27 @@ else:
         selected_comp = st.multiselect('Campeonato', competicoes(gamestats, selected_season), competicoes(gamestats, selected_season))
         gamestats_tratado = df_stats(gamestats, selected_season, selected_comp)
 
-        col2, col3, col4 = st.columns(3)
+        col2, col3 = st.columns(2)
 
-        col2.write('Jardas recebidas')
-        stats = gamestats_tratado.sort_values(by='Jardas recebidas', ascending=False)
-        stats = stats.loc[:,['Numero','Jardas recebidas']]
-        stats = stats[stats["Jardas recebidas"] != 0]
-        col2.dataframe(stats, hide_index=True)
-
-        col3.write('Passes recebidos')
-        stats = gamestats_tratado.sort_values(by='Passes recebidos', ascending=False)
-        stats = stats.loc[:,['Numero','Passes recebidos']]
-        stats = stats[stats["Passes recebidos"] != 0]
-        col3.dataframe(stats, hide_index=True)
-
-        col4.write('Alvo')
-        stats = gamestats_tratado.sort_values(by='Alvo', ascending=False)
-        stats = stats.loc[:,['Numero','Alvo']]
-        stats = stats[stats["Alvo"] != 0]
-        col4.dataframe(stats, hide_index=True)
         
-        col2.write('TD aéreo')
-        stats = gamestats_tratado.sort_values(by='TD recebendo', ascending=False)
-        stats = stats.loc[:,['Numero','TD recebendo']]
-        stats = stats[stats["TD recebendo"] != 0]
-        col2.dataframe(stats, hide_index=True)
-
-        col3.write('Corridas tentadas')
-        stats = gamestats_tratado.sort_values(by='Corridas tentadas', ascending=False)
-        stats = stats.loc[:,['Numero','Corridas tentadas']]
-        stats = stats[stats["Corridas tentadas"] != 0]
-        col3.dataframe(stats, hide_index=True)
-
-        col4.write('Jardas corridas')
-        stats = gamestats_tratado.sort_values(by='Jardas corridas', ascending=False)
-        stats = stats.loc[:,['Numero','Jardas corridas']]
-        stats = stats[stats["Jardas corridas"] != 0]
-        col4.dataframe(stats, hide_index=True)
-
-        col4.write('TD corrido')
-        stats = gamestats_tratado.sort_values(by='TD corrido', ascending=False)
-        stats = stats.loc[:,['Numero','TD corrido']]
-        stats = stats[stats["TD corrido"] != 0]
-        col4.dataframe(stats, hide_index=True)
+        col2.write('Passes recebidos')
+        col2.dataframe(team_leaders('Passes recebidos',gamestats_tratado).sort_values(by='Passes recebidos', ascending=False), hide_index=True)
+        
+        col3.write('Alvo')
+        col3.dataframe(team_leaders('Alvo',gamestats_tratado).sort_values(by='Alvo', ascending=False), hide_index=True)
+        
+        col2.write('Jardas recebidas')
+        col2.dataframe(team_leaders('Jardas recebidas',gamestats_tratado).sort_values(by='Jardas recebidas', ascending=False), hide_index=True)
+        
+        col3.write('TD aéreo')
+        col3.dataframe(team_leaders('TD recebendo',gamestats_tratado).sort_values(by='TD recebendo', ascending=False), hide_index=True)
+        
+        col2.write('Corridas tentadas')
+        col2.dataframe(team_leaders('Corridas tentadas',gamestats_tratado).sort_values(by='Corridas tentadas', ascending=False), hide_index=True)
+        
+        col3.write('Jardas corridas')
+        col3.dataframe(team_leaders('Jardas corridas',gamestats_tratado).sort_values(by='Jardas corridas', ascending=False), hide_index=True)
+        
+        col2.write('TD corrido')
+        col2.dataframe(team_leaders('TD corrido',gamestats_tratado).sort_values(by='TD corrido', ascending=False), hide_index=True)
+        
