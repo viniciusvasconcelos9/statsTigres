@@ -114,8 +114,16 @@ def team_leaders(stat_name,df_gamestats):
 
     return stats
 
+def team_stats(df, game):
+    game = game.split(' - ')
+    for x in range(len(df)):
+        if df[x][1]['Ano'].to_string(index=False) == game[0] and df[x][1]['Competicao'].to_string(index=False) == game[1] and df[x][1]['Rodada'].to_string(index=False) == game[2]:
+            print('ok1') 
+            return df[x][0]       
+
 
 gamestats = load_game_data()
+#st.write(gamestats[0][1])
 #st.write(gamestats[0][1]['Ano'].to_string(index=False))
 #st.write(temporadas(gamestats))
 playerstats = load_players_data()
@@ -229,19 +237,18 @@ elif sidebar_option == 'Game stats':
     selected_comp = st.sidebar.multiselect('Campeonato', competicoes(gamestats, selected_season), competicoes(gamestats, selected_season))
     selected_game = st.sidebar.selectbox('Jogo',jogos(gamestats, selected_season, selected_comp))
 
-    #gamestats_tratado = df_stats(gamestats, selected_season, selected_comp) 
-
-    #st.dataframe(gamestats_tratado)
+    team_gamestats = team_stats(gamestats, selected_game)
+    #st.dataframe(team_gamestats)
 
     st.subheader('Ataque')
 
-    st.write('Jardas totais')
-    st.write('Snaps totais')
-    st.write('Jardas corridas/tentativas: ')
-    st.write('TD corrido: ')
-    st.write('Passes completos/tentados: ')
-    st.write('Jardas aéreas')
-    st.write('TD aéreo: ')
+    st.write('Jardas totais: ' + str(team_gamestats['Jardas passadas'].sum()))
+    st.write('Snaps totais: ' + str(team_gamestats['Corridas tentadas'].sum() + team_gamestats['Passes tentados'].sum()))
+    st.write('Jardas corridas/tentativas: ' + str(team_gamestats['Jardas corridas'].sum()) + '/' + str(team_gamestats['Corridas tentadas'].sum()))
+    st.write('TD corrido: ' + str(team_gamestats['TD corrido'].sum()))
+    st.write('Passes completos/tentados: ' + str(team_gamestats['Passes completos'].sum()) + '/' + str(team_gamestats['Passes tentados'].sum()))
+    st.write('Jardas aéreas: ' + str(team_gamestats['Jardas passadas'].sum()))
+    st.write('TD aéreo: ' + str(team_gamestats['TD passado'].sum()))
     st.write('Total de first downs: ')
     st.write('Eficiência em 3rd down: ')
 
