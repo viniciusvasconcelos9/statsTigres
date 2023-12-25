@@ -118,7 +118,6 @@ def team_stats(df, game):
     game = game.split(' - ')
     for x in range(len(df)):
         if df[x][1]['Ano'].to_string(index=False) == game[0] and df[x][1]['Competicao'].to_string(index=False) == game[1] and df[x][1]['Rodada'].to_string(index=False) == game[2]:
-            print('ok1') 
             return df[x][0]       
 
 
@@ -242,8 +241,8 @@ elif sidebar_option == 'Game stats':
 
     st.subheader('Ataque')
 
-    st.write('Jardas totais: ' + str(team_gamestats['Jardas passadas'].sum()))
     st.write('Snaps totais: ' + str(team_gamestats['Corridas tentadas'].sum() + team_gamestats['Passes tentados'].sum()))
+    st.write('Jardas totais: ' + str(team_gamestats['Jardas passadas'].sum()))
     st.write('Jardas corridas/tentativas: ' + str(team_gamestats['Jardas corridas'].sum()) + '/' + str(team_gamestats['Corridas tentadas'].sum()) + ' (' + str(round(team_gamestats['Jardas corridas'].sum()/team_gamestats['Corridas tentadas'].sum(),1)) + ' yds)')
     st.write('TD corrido: ' + str(team_gamestats['TD corrido'].sum()))
     st.write('Passes completos/tentados: ' + str(team_gamestats['Passes completos'].sum()) + '/' + str(team_gamestats['Passes tentados'].sum()))
@@ -251,10 +250,29 @@ elif sidebar_option == 'Game stats':
     st.write('TD aéreo: ' + str(team_gamestats['TD passado'].sum()))
     st.write('Total de first downs: ')
     st.write('Eficiência em 3rd down: ')
+    st.write('Eficiência em 4th down: ')
 
     st.subheader('Defesa')
 
+    st.write('Snaps totais: ')
+    st.write('Jardas cedidas: ')
+    st.write('Jardas corridas/tentativas: ')
+    st.write('TD corrido: ')
+    st.write('Passes completos/tentados: ')
+    st.write('Jardas aéreas: ')
+    st.write('TD aéreo: ')
+    st.write('Sacks: ')
+    st.write('Tackle for loss: ')
+    st.write('Interceptações: ')
+    st.write('Fumble forçados/fumble recuperado: ')
+    st.write('Total de first downs: ')
+    st.write('Eficiência em 3rd down: ')
+    st.write('Eficiência em 4th down: ')
     st.subheader('Special teams')
+
+    st.write('Punt: ')
+    st.write('FG: ')
+    st.write('XP: ')
 
 else:
     setor_option = st.sidebar.selectbox('Setor',['Ataque','Defesa'])
