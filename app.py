@@ -244,7 +244,7 @@ elif sidebar_option == 'Game stats':
 
     st.write('Jardas totais: ' + str(team_gamestats['Jardas passadas'].sum()))
     st.write('Snaps totais: ' + str(team_gamestats['Corridas tentadas'].sum() + team_gamestats['Passes tentados'].sum()))
-    st.write('Jardas corridas/tentativas: ' + str(team_gamestats['Jardas corridas'].sum()) + '/' + str(team_gamestats['Corridas tentadas'].sum()))
+    st.write('Jardas corridas/tentativas: ' + str(team_gamestats['Jardas corridas'].sum()) + '/' + str(team_gamestats['Corridas tentadas'].sum()) + ' (' + str(round(team_gamestats['Jardas corridas'].sum()/team_gamestats['Corridas tentadas'].sum(),1)) + ' yds)')
     st.write('TD corrido: ' + str(team_gamestats['TD corrido'].sum()))
     st.write('Passes completos/tentados: ' + str(team_gamestats['Passes completos'].sum()) + '/' + str(team_gamestats['Passes tentados'].sum()))
     st.write('Jardas aéreas: ' + str(team_gamestats['Jardas passadas'].sum()))
@@ -253,6 +253,7 @@ elif sidebar_option == 'Game stats':
     st.write('Eficiência em 3rd down: ')
 
     st.subheader('Defesa')
+
     st.subheader('Special teams')
 
 else:
