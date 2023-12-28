@@ -33,7 +33,7 @@ def load_game_data():
         dados = []
         dados.append(pd.read_csv("dados/Jogos/indy/"+file, sep=','))
         dados.append(file_to_df(file))
-        dados.append(pd.read_csv("dados/Jogos/geral/"+file, sep=','))
+        dados.append(pd.read_csv("dados/Jogos/"+file, sep=','))
         dados_finais.append(dados)
     return dados_finais
 
