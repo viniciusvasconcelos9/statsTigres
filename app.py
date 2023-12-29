@@ -258,7 +258,7 @@ elif sidebar_option == 'Game stats':
     rival_gamestats = geral_gamestats[geral_gamestats['Equipe'] != 'Tigres']
     
 
-    st.dataframe(geral_gamestats)
+    #st.dataframe(geral_gamestats)
     st.divider()
     st.subheader('Ataque')
 
@@ -280,7 +280,7 @@ elif sidebar_option == 'Game stats':
     st.write('Posses do ataque rival: '+ str(rival_gamestats['Posse'].max()).split('.')[0])
     st.write('Snaps totais: ' + str((rival_gamestats['Jogada'] == 'Corrida').sum() + (rival_gamestats['Jogada'] == 'Passe').sum() + (rival_gamestats['Jogada'] == 'Sack').sum()))
     st.write('Jardas totais: ')
-    st.write(rival_gamestats[rival_gamestats['Jogada'] == 'Corrida'])
+    #st.write(rival_gamestats[rival_gamestats['Jogada'] == 'Corrida'])
     st.write('Jardas corridas(tentativas): ' + ' (' + str(len(rival_gamestats[rival_gamestats['Jogada'] == 'Corrida'])) + ')')
     st.write('TD corrido: ' + str(rival_gamestats.loc[(rival_gamestats['Jogada'] == 'Corrida') & (rival_gamestats['TD'] == "Sim")].shape[0]))
     st.write('Passes completos/tentados: ' + str(len(rival_gamestats[rival_gamestats['Jogada'] == 'Passe']) - (rival_gamestats['Inc'] == 'Sim').sum()) + '/'+ str(len(rival_gamestats[rival_gamestats['Jogada'] == 'Passe'])))
