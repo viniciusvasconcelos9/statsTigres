@@ -84,17 +84,18 @@ def df_stats(df, ano, campeonato):
     return new_dataframe
 
 def season_stats(df, ano, campeonato):
-    new_template = df[0][0]
+
+    new_template = df[0][2]
     template_columns = new_template.columns
-    new_dataframe = pd.DataFrame(0, columns=template_columns, index=range(100))
+    new_dataframe = pd.DataFrame(0, columns=template_columns, index=range(1))
 
+    for x in range(len(df)):
+        if df[x][1]['Ano'].to_string(index=False) in ano:
+            if df[x][1]['Competicao'].to_string(index=False) in campeonato:
+                dataframe = df[x][2]
+                new_dataframe = pd.concat([new_dataframe, df[x][2]], ignore_index = True)
 
-
-def df_team_stats(df, game):
-    jogo = game.split('-')
-    
-    #for x in range(len(df)):
-
+    return new_dataframe
 
 
 def rating(att, comp, yds, td, ints):
@@ -247,11 +248,12 @@ elif sidebar_option == 'Game stats':
     st.write('Passes completos/tentados: ' + str(team_gamestats['Passes completos'].sum()) + '/' + str(team_gamestats['Passes tentados'].sum()) + ' (' + str(round(100*team_gamestats['Passes completos'].sum()/team_gamestats['Passes tentados'].sum(),1)) + '%)')
     st.write('Jardas aéreas: ' + str(team_gamestats['Jardas passadas'].sum()))
     st.write('TD aéreo: ' + str(team_gamestats['TD passado'].sum()))
-    st.write('TD aéreo: ' + str(team_gamestats['O-Sack'].sum()))
+    st.write('Sack: ' + str(team_gamestats['O-Sack'].sum()))
     st.write('Total de first downs: ' + str((tigres_gamestats['1st down'] == 'Sim').sum()))
     st.write('Eficiência em 3rd down: ' + str(tigres_gamestats.loc[(tigres_gamestats['1st down'] == 'Sim') & (tigres_gamestats['3rd down'] == "Sim")].shape[0]) + '/'+ str((tigres_gamestats['3rd down'] == 'Sim').sum()))
     st.write('Eficiência em 4th down: '+ str(tigres_gamestats.loc[(tigres_gamestats['1st down'] == 'Sim') & (tigres_gamestats['4th down'] == "Sim")].shape[0]) + '/'+ str((tigres_gamestats['4th down'] == 'Sim').sum()))
-
+    st.write('Eficiência de Red Zone (Situações/TD/FG): ')
+    
     st.divider()
     st.subheader('Defesa')
 
@@ -288,7 +290,11 @@ elif sidebar_option == 'Season stats':
     
     
     temp_stats = df_stats(gamestats, selected_season, selected_comp)
-    st.write(temp_stats)
+    geral_season_stats = season_stats(gamestats, selected_season, selected_comp)
+    geral_season_stats['Yds'] = geral_season_stats['Yds'].fillna(value=0)
+    geral_season_stats['Yds'] = geral_season_stats['Yds'].astype(int)
+    tigres_gamestats = geral_season_stats[geral_season_stats['Equipe'] == 'Tigres']
+    rival_gamestats = geral_season_stats[geral_season_stats['Equipe'] != 'Tigres']
 
     st.divider()
     st.subheader('Ataque')
@@ -302,40 +308,40 @@ elif sidebar_option == 'Season stats':
     st.write('Jardas aéreas: ' + str(temp_stats['Jardas passadas'].sum()))
     st.write('TD aéreo: ' + str(temp_stats['TD passado'].sum()))
     st.write('Sack: ' + str(temp_stats['O-Sack'].sum()))
-    st.write('Total de first downs: ')
-    st.write('Eficiência em 3rd down: ')
-    st.write('Eficiência em 4th down: ')
+    st.write('Total de first downs: ' + str((tigres_gamestats['1st down'] == 'Sim').sum()))
+    st.write('Eficiência em 3rd down: ' + str(tigres_gamestats.loc[(tigres_gamestats['1st down'] == 'Sim') & (tigres_gamestats['3rd down'] == "Sim")].shape[0]) + '/'+ str((tigres_gamestats['3rd down'] == 'Sim').sum()))
+    st.write('Eficiência em 4th down: '+ str(tigres_gamestats.loc[(tigres_gamestats['1st down'] == 'Sim') & (tigres_gamestats['4th down'] == "Sim")].shape[0]) + '/'+ str((tigres_gamestats['4th down'] == 'Sim').sum()))
+    st.write('Eficiência de Red Zone (Situações/TD/FG): ')
 
     st.divider()
     st.subheader('Defesa')
 
     st.write('Posses do ataque rival: ')
-    st.write('Snaps totais: ')
-    st.write('Jardas totais: ')   
-    st.write('Jardas corridas(tentativas): ')
-    st.write('TD corrido: ')
-    st.write('Passes completos/tentados: ')
-    st.write('Jardas aéreas: ')
-    st.write('TD aéreo: ')
-    st.write('Sack: ')
-    st.write('Tackle for loss: ')
-    st.write('Interceptações: ')
-    st.write('Fumble forçado/recuperados: ')
-    st.write('Total de first downs: ')
-    st.write('Eficiência em 3rd down: ')
-    st.write('Eficiência em 4th down: ')
+    st.write('Snaps totais: ' + str((rival_gamestats['Jogada'] == 'Corrida').sum() + (rival_gamestats['Jogada'] == 'Passe').sum() + (rival_gamestats['Jogada'] == 'Sack').sum()))
+    st.write('Jardas totais: ' + str((rival_gamestats[rival_gamestats['Jogada'] == 'Corrida'])['Yds'].sum() + (rival_gamestats[rival_gamestats['Jogada'] == 'Passe'])['Yds'].sum()))   
+    st.write('Jardas corridas(tentativas): ' + str((rival_gamestats[rival_gamestats['Jogada'] == 'Corrida'])['Yds'].sum()) + ' (' + str(len(rival_gamestats[rival_gamestats['Jogada'] == 'Corrida'])) + ')')
+    st.write('TD corrido: ' + str(rival_gamestats.loc[(rival_gamestats['Jogada'] == 'Corrida') & (rival_gamestats['TD'] == "Sim")].shape[0]))
+    st.write('Passes completos/tentados: ' + str(len(rival_gamestats[rival_gamestats['Jogada'] == 'Passe']) - (rival_gamestats['Inc'] == 'Sim').sum()) + '/'+ str(len(rival_gamestats[rival_gamestats['Jogada'] == 'Passe'])))
+    st.write('Jardas aéreas: ' + str((rival_gamestats[rival_gamestats['Jogada'] == 'Passe'])['Yds'].sum()))
+    st.write('TD aéreo: ' + str(rival_gamestats.loc[(rival_gamestats['Jogada'] == 'Passe') & (rival_gamestats['TD'] == "Sim")].shape[0]))
+    st.write('Sack: ' + str(rival_gamestats.loc[(rival_gamestats['Sack'] == "Sim")].shape[0]))
+    st.write('Tackle for loss: ' + str(temp_stats['Tackle for loss'].sum()))
+    st.write('Interceptações: ' + str(temp_stats['Interceptação'].sum()))
+    st.write('Fumble forçado/recuperados: ' + str(temp_stats['FF'].sum()) + '/' + str(temp_stats['FR'].sum()))
+    st.write('Total de first downs: ' + str((rival_gamestats['1st down'] == 'Sim').sum()))
+    st.write('Eficiência em 3rd down: ' + str(rival_gamestats.loc[(rival_gamestats['1st down'] == 'Sim') & (rival_gamestats['3rd down'] == "Sim")].shape[0]) + '/'+ str((rival_gamestats['3rd down'] == 'Sim').sum()))
+    st.write('Eficiência em 4th down: '+ str(rival_gamestats.loc[(rival_gamestats['1st down'] == 'Sim') & (rival_gamestats['4th down'] == "Sim")].shape[0]) + '/'+ str((rival_gamestats['4th down'] == 'Sim').sum()))
 
     st.divider()
     st.subheader('Special teams')
 
-    st.write('Punt: ')
-    st.write('Field Goal: ')
-    st.write('XP: ')
-    st.write('TD Kickoff Return: ')
-    st.write('TD Punt Return: ')
+    st.write('Punt: ' + str(temp_stats['Punt'].sum()) + '/' + str(temp_stats['Yds'].sum()) + ' (' + str(round(temp_stats['Yds'].sum()/temp_stats['Punt'].sum(),1)) + ' yds)')
+    st.write('Field Goal: ' + str(temp_stats['FG acertado'].sum()) + '/' + str(temp_stats['FG tentados'].sum()))
+    st.write('XP: ' + str(temp_stats['XP acertado'].sum()) + '/' + str(temp_stats['XP tentados'].sum()))
+    st.write('TD Kickoff Return: ' + str(temp_stats['TD KO Return'].sum()))
+    st.write('TD Punt Return: ' + str(temp_stats['TD Punt Return'].sum()))
 
     st.divider()
-
 
 else:
     setor_option = st.sidebar.selectbox('Setor',['Ataque','Defesa'])
