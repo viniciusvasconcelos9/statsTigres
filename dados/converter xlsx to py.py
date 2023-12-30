@@ -5,7 +5,7 @@ files = os.listdir("Jogos XLSX/")
 
 for file in files:
     
-    indy = pd.read_excel("Jogos XLSX/" + file, sheet_name = 'Indy' ) #geral
+    indy = pd.read_excel("Jogos XLSX/" + file, sheet_name = 'Geral' ) #geral
     sobre = pd.read_excel("Jogos XLSX/" + file, sheet_name = 'Sobre')
     
     ano = sobre['Ano'].to_string(index=False)

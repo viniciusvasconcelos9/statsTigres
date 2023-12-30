@@ -9,12 +9,13 @@ st.sidebar.divider()
 
 @st.cache_data
 
-
+#FUNÇÃO PARA CAREEGAR ARQUIVO COM DADOS GERAIS DOS ATLETAS
 def load_players_data():
     arquivo = "dados/Dados Atletas - Tigres.csv"
     dados = pd.read_csv(arquivo, sep=';')
     return dados
 
+#FUNÇÃO PARA CRIAR DATAFRAME COM DADOS DA PARTIDA
 def file_to_df(arquivo):
     nome = arquivo.split('-')
 
@@ -23,6 +24,7 @@ def file_to_df(arquivo):
 
     return df
 
+#FUNÇÃO PARA CRIAR DATAFRAME COM DADOS DE TODAS AS PARTIDAS DO BANCO DE DADOS
 def load_game_data():
     files = os.listdir("dados/Jogos/indy/")
     #print(files)
@@ -36,6 +38,7 @@ def load_game_data():
         dados_finais.append(dados)
     return dados_finais
 
+#FUNÇÃO PARA RETORNAR AS TEMPORADAS DOS JOGOS DO BANCO DE DADOS
 def temporadas(df):
     temporadas = []
     for x in range (len(df)):
@@ -46,6 +49,7 @@ def temporadas(df):
             temporadas.append(ano)
     return temporadas
 
+#FUNÇÃO PARA RETORNAR AS COMPETIÇÕES DOS JOGOS DO BANCO DE DADOS
 def competicoes (df, temporada):
     camp = []
     for x in range (len(df)):
@@ -57,6 +61,7 @@ def competicoes (df, temporada):
                 camp.append(comp)
     return camp 
 
+#FUNÇÃO QUE RETORNA OS JOGOS POR COMPETIÇÃO/TEMPORADA
 def jogos (df, temporada, competicao):
     games = []
     for x in range (len(df)):
@@ -69,6 +74,7 @@ def jogos (df, temporada, competicao):
                     games.append(game)
     return games
 
+#FUNÇÃO QUE RETORNA O DATAFRAME COM DADOS INDIVIDUAIS PARA OS JOGOS SELECIONADOS
 def df_stats(df, ano, campeonato):
     
     new_template = df[0][0]
@@ -82,6 +88,7 @@ def df_stats(df, ano, campeonato):
     new_dataframe['Numero'] = range(100)         
     return new_dataframe
 
+#FUNÇÃO QUE RETORNA O DATAFRAME COM DADOS GERAIS PARA OS JOGOS SELECIONADOS
 def season_stats(df, ano, campeonato):
 
     new_template = df[0][2]
@@ -91,12 +98,11 @@ def season_stats(df, ano, campeonato):
     for x in range(len(df)):
         if df[x][1]['Ano'].to_string(index=False) in ano:
             if df[x][1]['Competicao'].to_string(index=False) in campeonato:
-                dataframe = df[x][2]
                 new_dataframe = pd.concat([new_dataframe, df[x][2]], ignore_index = True)
 
     return new_dataframe
 
-
+#FUNÇÃO QUE CALCULA O QB RATING
 def rating(att, comp, yds, td, ints):
 
     a = (int(comp) / int(att) - 0.3) * 5
@@ -112,6 +118,7 @@ def rating(att, comp, yds, td, ints):
     rat = ((a + b + c + d) / 6) * 100
 
     return rat
+
 
 def team_leaders(stat_name,df_gamestats):
     stats = df_gamestats.loc[:,['Numero',stat_name]]
@@ -293,26 +300,31 @@ elif sidebar_option == 'Season stats':
     
     temp_stats = df_stats(gamestats, selected_season, selected_comp)
     geral_season_stats = season_stats(gamestats, selected_season, selected_comp)
+    qtde_jogos = geral_season_stats['Equipe'].nunique()-2
+
     geral_season_stats['Yds'] = geral_season_stats['Yds'].fillna(value=0)
     geral_season_stats['Yds'] = geral_season_stats['Yds'].astype(int)
     tigres_gamestats = geral_season_stats[geral_season_stats['Equipe'] == 'Tigres']
     rival_gamestats = geral_season_stats[geral_season_stats['Equipe'] != 'Tigres']
+    st.write('Total de jogos: ' + str(qtde_jogos))
 
     st.divider()
     st.subheader('Ataque')
 
     st.write('Posses: ')
-    st.write('Snaps totais: ' + str(temp_stats['Corridas tentadas'].sum() + temp_stats['Passes tentados'].sum() + temp_stats['O-Sack'].sum()))
-    st.write('Jardas totais: ' + str(temp_stats['Jardas passadas'].sum() + temp_stats['Jardas corridas'].sum()))
-    st.write('Jardas corridas/tentativas: ' + str(temp_stats['Jardas corridas'].sum()) + '/' + str(temp_stats['Corridas tentadas'].sum()) + ' (' + str(round(temp_stats['Jardas corridas'].sum()/temp_stats['Corridas tentadas'].sum(),1)) + ' yds)')
-    st.write('TD corrido: ' + str(temp_stats['TD corrido'].sum()))
-    st.write('Passes completos/tentados: ' + str(temp_stats['Passes completos'].sum()) + '/' + str(temp_stats['Passes tentados'].sum()) + ' (' + str(round(100*temp_stats['Passes completos'].sum()/temp_stats['Passes tentados'].sum(),1)) + '%)')
-    st.write('Jardas aéreas: ' + str(temp_stats['Jardas passadas'].sum()))
-    st.write('TD aéreo: ' + str(temp_stats['TD passado'].sum()))
-    st.write('Interceptações: ' + str(temp_stats['INT'].sum()))
+    snap_totais = temp_stats['Corridas tentadas'].sum() + temp_stats['Passes tentados'].sum() + temp_stats['O-Sack'].sum()
+    st.write('Snaps totais: ' + str(snap_totais) + ' (*' + str(round(snap_totais/qtde_jogos,1)) + ' por jogo*)')
+    jardas_totais = temp_stats['Jardas passadas'].sum() + temp_stats['Jardas corridas'].sum()
+    st.write('Jardas totais: ' + str(jardas_totais) + ' (*' + str(round(jardas_totais/qtde_jogos, 1)) + ' por jogo*)')
+    st.write('Jardas corridas/tentativas: ' + str(temp_stats['Jardas corridas'].sum()) + '/' + str(temp_stats['Corridas tentadas'].sum()) + ' (' + str(round(temp_stats['Jardas corridas'].sum()/temp_stats['Corridas tentadas'].sum(),1)) + ' yds por corrida)')
+    st.write('TD corrido: ' + str(temp_stats['TD corrido'].sum())  + ' (*' + str(round(temp_stats['TD corrido'].sum()/qtde_jogos, 1)) + ' por jogo*)')
+    st.write('Passes completos/tentados: ' + str(temp_stats['Passes completos'].sum()) + '/' + str(temp_stats['Passes tentados'].sum()) + ' (*' + str(round(100*temp_stats['Passes completos'].sum()/temp_stats['Passes tentados'].sum(),1)) + '%*)')
+    st.write('Jardas aéreas: ' + str(temp_stats['Jardas passadas'].sum())  + ' (*' + str(round(temp_stats['Jardas passadas'].sum()/qtde_jogos, 1)) + ' por jogo*)')
+    st.write('TD aéreo: ' + str(temp_stats['TD passado'].sum())  + ' (*' + str(round(temp_stats['TD passado'].sum()/qtde_jogos, 1)) + ' por jogo*)')
+    st.write('Interceptações: ' + str(temp_stats['INT'].sum())  + ' (*' + str(round(temp_stats['INT'].sum()/qtde_jogos, 1)) + ' por jogo*)')
     st.write('QB rating: ' + str(round(rating(temp_stats['Passes tentados'].sum(), temp_stats['Passes completos'].sum(), temp_stats['Jardas passadas'].sum(), temp_stats['TD passado'].sum(), temp_stats['INT'].sum()), 1)))
-    st.write('Sack: ' + str(temp_stats['O-Sack'].sum()))
-    st.write('Total de first downs: ' + str((tigres_gamestats['1st down'] == 'Sim').sum()))
+    st.write('Sack: ' + str(temp_stats['O-Sack'].sum())  + ' (*' + str(round(temp_stats['O-Sack'].sum()/qtde_jogos, 1)) + ' por jogo*)')
+    st.write('Total de first downs: ' + str((tigres_gamestats['1st down'] == 'Sim').sum())  + ' (*' + str(round((tigres_gamestats['1st down'] == 'Sim').sum()/qtde_jogos, 1)) + ' por jogo*)')
     st.write('Eficiência em 3rd down: ' + str(tigres_gamestats.loc[(tigres_gamestats['1st down'] == 'Sim') & (tigres_gamestats['3rd down'] == "Sim")].shape[0]) + '/'+ str((tigres_gamestats['3rd down'] == 'Sim').sum()))
     st.write('Eficiência em 4th down: '+ str(tigres_gamestats.loc[(tigres_gamestats['1st down'] == 'Sim') & (tigres_gamestats['4th down'] == "Sim")].shape[0]) + '/'+ str((tigres_gamestats['4th down'] == 'Sim').sum()))
     st.write('Eficiência de Red Zone (Situações/TD/FG): ')
@@ -387,7 +399,6 @@ else:
 
         col2, col3 = st.columns(2)
 
-        
         col2.write('Passes recebidos')
         col2.dataframe(team_leaders('Passes recebidos',gamestats_tratado).sort_values(by='Passes recebidos', ascending=False), hide_index=True)
         
