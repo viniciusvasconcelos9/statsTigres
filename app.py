@@ -258,7 +258,7 @@ elif sidebar_option == 'Game stats':
     rival_gamestats = geral_gamestats[geral_gamestats['Equipe'] != 'Tigres']
     
 
-    #st.dataframe(geral_gamestats)
+    st.dataframe(rival_gamestats)
     st.divider()
     st.subheader('Ataque')
 
@@ -279,14 +279,13 @@ elif sidebar_option == 'Game stats':
 
     st.write('Posses do ataque rival: '+ str(rival_gamestats['Posse'].max()).split('.')[0])
     st.write('Snaps totais: ' + str((rival_gamestats['Jogada'] == 'Corrida').sum() + (rival_gamestats['Jogada'] == 'Passe').sum() + (rival_gamestats['Jogada'] == 'Sack').sum()))
-    st.write('Jardas totais: ')
-    #st.write(rival_gamestats[rival_gamestats['Jogada'] == 'Corrida'])
-    st.write('Jardas corridas(tentativas): ' + ' (' + str(len(rival_gamestats[rival_gamestats['Jogada'] == 'Corrida'])) + ')')
+    st.write('Jardas totais: ' + str((rival_gamestats[rival_gamestats['Jogada'] == 'Corrida'])['Yds'].sum() + (rival_gamestats[rival_gamestats['Jogada'] == 'Passe'])['Yds'].sum()))   
+    st.write('Jardas corridas(tentativas): ' + str((rival_gamestats[rival_gamestats['Jogada'] == 'Corrida'])['Yds'].sum()) + ' (' + str(len(rival_gamestats[rival_gamestats['Jogada'] == 'Corrida'])) + ')')
     st.write('TD corrido: ' + str(rival_gamestats.loc[(rival_gamestats['Jogada'] == 'Corrida') & (rival_gamestats['TD'] == "Sim")].shape[0]))
     st.write('Passes completos/tentados: ' + str(len(rival_gamestats[rival_gamestats['Jogada'] == 'Passe']) - (rival_gamestats['Inc'] == 'Sim').sum()) + '/'+ str(len(rival_gamestats[rival_gamestats['Jogada'] == 'Passe'])))
     st.write('Jardas aéreas: ' + str((rival_gamestats[rival_gamestats['Jogada'] == 'Passe'])['Yds'].sum()))
     st.write('TD aéreo: ' + str(rival_gamestats.loc[(rival_gamestats['Jogada'] == 'Passe') & (rival_gamestats['TD'] == "Sim")].shape[0]))
-    st.write('Sack: ' + str(team_gamestats['D-Sack'].sum()))
+    st.write('Sack: ' + str(rival_gamestats.loc[(rival_gamestats['Sack'] == "Sim")].shape[0]))
     st.write('Tackle for loss: ' + str(team_gamestats['Tackle for loss'].sum()))
     st.write('Interceptações: ' + str(team_gamestats['Interceptação'].sum()))
     st.write('Fumble forçado/recuperados: ' + str(team_gamestats['FF'].sum()) + '/' + str(team_gamestats['FR'].sum()))
