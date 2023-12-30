@@ -2,7 +2,6 @@ import os
 import pandas as pd
 import streamlit as st
 
-st.title('Estatísticas - Tigres FA')
 #st.sidebar.divider()
 option_menu = [ 'Dados Gerais', 'Team Leaders', 'Indy', 'Game stats', 'Season stats']
 sidebar_option = st.sidebar.selectbox('Menu',option_menu)
@@ -144,10 +143,8 @@ playerstats = load_players_data()
 playerstats = playerstats.fillna(0)
 
 if sidebar_option == 'Dados Gerais':
-    
-    st.header('Cadastro Geral de Atletas')
-
-    
+    st.title('- CADASTRO GERAL DE ATLETAS -')
+        
     unique_pos = ['RB','QB','WR','OL','DL','LB','DB']
     selected_pos = st.sidebar.multiselect('Posição', unique_pos, unique_pos)
     df_selected = playerstats[(playerstats.Pos.isin(selected_pos))]
@@ -156,7 +153,7 @@ if sidebar_option == 'Dados Gerais':
     st.dataframe(df_selected, hide_index=True)
 
 elif sidebar_option == "Indy":
-    #st.header('Estatísticas Individuais')
+    st.title('- ESTATÍSTICAS INDIVIDUAIS -')
     
 
     player = st.sidebar.selectbox('Número do jogador',(playerstats['Nome']))
@@ -225,6 +222,7 @@ elif sidebar_option == "Indy":
     st.divider()
 
 elif sidebar_option == 'Game stats':
+    st.title('- GAME STATS -')
 
     selected_season = st.sidebar.multiselect('Temporada', temporadas(gamestats),temporadas(gamestats))
     selected_comp = st.sidebar.multiselect('Campeonato', competicoes(gamestats, selected_season), competicoes(gamestats, selected_season))
@@ -253,7 +251,7 @@ elif sidebar_option == 'Game stats':
     st.write('Eficiência em 3rd down: ' + str(tigres_gamestats.loc[(tigres_gamestats['1st down'] == 'Sim') & (tigres_gamestats['3rd down'] == "Sim")].shape[0]) + '/'+ str((tigres_gamestats['3rd down'] == 'Sim').sum()))
     st.write('Eficiência em 4th down: '+ str(tigres_gamestats.loc[(tigres_gamestats['1st down'] == 'Sim') & (tigres_gamestats['4th down'] == "Sim")].shape[0]) + '/'+ str((tigres_gamestats['4th down'] == 'Sim').sum()))
     st.write('Eficiência de Red Zone (Situações/TD/FG): ')
-    
+
     st.divider()
     st.subheader('Defesa')
 
@@ -285,6 +283,8 @@ elif sidebar_option == 'Game stats':
     st.divider()
 
 elif sidebar_option == 'Season stats':
+    st.title('- SEASON STATS -')
+
     selected_season = st.sidebar.multiselect('Temporada', temporadas(gamestats),temporadas(gamestats))
     selected_comp = st.sidebar.multiselect('Campeonato', competicoes(gamestats, selected_season), competicoes(gamestats, selected_season))
     
@@ -344,6 +344,7 @@ elif sidebar_option == 'Season stats':
     st.divider()
 
 else:
+    st.title('- TEAM LEADERS -')
     setor_option = st.sidebar.selectbox('Setor',['Ataque','Defesa'])
     df_nome_numero = playerstats.loc[:,['Numero','Apelido']]  
 
